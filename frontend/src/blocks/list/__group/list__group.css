@@ -1,0 +1,7 @@
+.list__group{
+    max-width: 246px;
+    display: flex;
+    align-items: center;
+    margin: 25px 15px 31px 21px;
+    padding: 0;
+}

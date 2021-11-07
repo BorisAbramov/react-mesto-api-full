@@ -1,0 +1,6 @@
+.popup__icon_status_err {
+    background-image: url("../../../../../images/failure.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }

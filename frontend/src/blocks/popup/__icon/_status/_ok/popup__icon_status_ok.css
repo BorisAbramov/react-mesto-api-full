@@ -1,0 +1,6 @@
+.popup__icon_status_ok {
+    background-image: url("../../../../../images/ok.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }

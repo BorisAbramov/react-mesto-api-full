@@ -1,0 +1,19 @@
+.profile-info__text{
+    color: white;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    max-width: 336px;
+    margin: 0;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+@media screen and (max-width: 600px){
+    .profile-info__text{
+        font-size: 14px;
+        line-height: 17px;
+        max-width: 282px;
+    }
+  }

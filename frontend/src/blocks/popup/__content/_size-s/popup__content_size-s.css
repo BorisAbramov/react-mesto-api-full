@@ -1,0 +1,10 @@
+.popup__content_size-s{
+    width: 430px;
+}
+
+@media screen and (max-width: 600px) {
+  .popup__content_size-s {
+    width: 282px;
+    padding: 25px 22px;
+  }
+}
