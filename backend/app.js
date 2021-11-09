@@ -14,13 +14,13 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const PORT = 3000;
 const app = express();
+app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 app.use(require('morgan')('dev'));
 app.use(express.json());
-app.use(cors());
 
 const method = (value) => {
   const result = validator.isURL(value);
