@@ -18,8 +18,9 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
-
+app.use(require('morgan')('dev'));
 app.use(express.json());
+app.use(cors());
 
 const method = (value) => {
   const result = validator.isURL(value);
@@ -30,7 +31,6 @@ const method = (value) => {
 };
 
 app.use(requestLogger);
-app.use(cors());
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
