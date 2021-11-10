@@ -12,9 +12,22 @@ const BadRequestError = require('./errors/BadRequestError');
 const handleError = require('./errors/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const options = {
+  origin: [
+    'http://localhost:3000',
+    'https://http://mesto-full.nomoredomains.work',
+    'https://BorisAbramov.github.io',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  credentials: true,
+};
+
 const PORT = 3000;
 const app = express();
-app.use(cors());
+app.use(cors(options));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
