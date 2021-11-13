@@ -1,5 +1,8 @@
-export const BASE_URL = "https://auth.nomoreparties.co";
+export const BASE_URL = "https://api.mesto-full.nomoredomains.work";
 
+const headers = {
+  "Content-Type": "application/json",
+};
 const checkStatus = (res) => {
   return res.ok
     ? res.json()
@@ -29,39 +32,58 @@ export const register = (password, email) => {
 };
 
 //авторизация
-export const authorize = (password, identifier) => {
+// export const authorize = (password, identifier) => {
+//   return fetch(`${BASE_URL}/signin`, {
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       password: password,
+//       email: identifier,
+//     }),
+//   })
+//     .then((res) => checkStatus(res))
+//     .then((data) => {
+//       if (data.token) {
+//         localStorage.setItem("jwt", data.token);
+//         return data;
+//       }
+//     });
+// };
+export const login = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password: password,
-      email: identifier,
-    }),
-  })
-    .then((res) => checkStatus(res))
-    .then((data) => {
-      if (data.token) {
-        localStorage.setItem("jwt", data.token);
-        return data;
-      }
-    });
-};
-
-//проверка валидности токена
-export const checkToken = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  .then((res) => {
+    headers,
+    body: JSON.stringify({ email, password }),
+  }).then((res) => {
     return checkStatus(res);
   });
 };
 
+//проверка валидности токена
+// export const checkToken = (token) => {
+//   return fetch(`${BASE_URL}/users/me`, {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//     },
+//   })
+//   .then((res) => {
+//     return checkStatus(res);
+//   });
+// };
+export const getContent = (token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => {
+    return checkStatus(res);
+  });
+};

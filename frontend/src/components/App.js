@@ -59,7 +59,7 @@ function App() {
 
   useEffect(() => {
     api
-      .getUserData()
+      .getUserInfo()
       .then((userData) => {
         setCurrentUser(userData);
       })
@@ -218,7 +218,7 @@ function App() {
     setIsSubmitted(true);
 
     auth
-      .authorize(password, email)
+      .login(password, email)
       .then((data) => {
         if (data.token) {
           setAuthUserData({
@@ -257,7 +257,7 @@ function App() {
 
     if (token) {
       auth
-        .checkToken(token)
+        .getContent(token)
         .then((res) => {
           const { data } = res;
           setUserEmail(data.email);
@@ -397,7 +397,7 @@ function App() {
         {isLoggedIn ? (
           <Redirect to="/main" />
         ) : (
-          <Redirect to="/sign-in" />
+          <Redirect to="/signin" />
         )}
       </Route>
     </Switch>
