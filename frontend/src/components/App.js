@@ -14,7 +14,7 @@ import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import InfoToolTip from "./InfoToolTip";
 import * as auth from "../utils/auth";
-import { getContent } from "../utils/auth";
+import { login, getContent } from "../utils/auth";
 
 
 
@@ -40,6 +40,7 @@ function App() {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [statusRegister, setStatusRegister] = useState(false);
   const history = useHistory();
   const ESC_KEYCODE = 27;
 
@@ -253,39 +254,29 @@ function App() {
   };
 
 
-  const handleLogin = (password, email) => {
-    setIsSubmitted(true);
-
-    auth
-      .login(password, email)
+  // 
+  function onLogin(email, password) {
+    login(email, password)
       .then((data) => {
+        if (!data) {
+          setStatusRegister(false);
+          setIsInfoToolTipOpen(true);
+          return;
+        }
         if (data.token) {
-          setAuthUserData({
-            ...authUserData,
-            email: "",
-            password: "",
-          });
-          setIsLoggedIn(true);
+          localStorage.setItem("jwt", data.token);
           setUserEmail(email);
-          setIsShowPassword(false);
-          history.push("/main");
-          setTimeout(() => setIsSubmitted(false), 3000);
+          setIsLoggedIn(true);
+          //setHeaderLinkName("Выйти");
+          history.push("/");
         }
       })
       .catch((err) => {
-        console.log(`Ошибка авторизации пользователя: ${err.status}`);
-        setAuthUserData({
-          ...authUserData,
-          message: `Ошибка авторизации пользователя: Неверный логин или пароль! Попробуйте еще раз.`,
-        });
-        setIsLoggedIn(false);
+        showErrorMessage(err);
+        setStatusRegister(false);
         setIsInfoToolTipOpen(true);
-        setIsSubmitted(false);
-        setIsShowPassword(false);
-        setUserEmail({});
       });
-    setTimeout(() => setIsSubmitted(false), 2000);
-  };
+  }
 
   useEffect(() => {
     handleTokenCheck();
@@ -424,7 +415,7 @@ function App() {
         userEmail={userEmail}
       />
       <Route path="/sign-in">
-        <Login handleLogin={handleLogin} isSubmitted={isSubmitted} />
+        <Login onLogin={onLogin} isSubmitted={isSubmitted} />
       </Route>
       <Route path="/sign-up">
         <Register
