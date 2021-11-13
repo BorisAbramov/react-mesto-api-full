@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "./Header";
 import InitialPageWithForm from "./InitialPageWithForm";
 
-const Login = ({ handleLogin, isSubmitted }) => {
+const Login = ({ onLogin, isSubmitted }) => {
   
   const [userData, setUserData] = useState({ email: "", password: "" });
 
@@ -23,7 +23,8 @@ const Login = ({ handleLogin, isSubmitted }) => {
       return;
     }
 
-    handleLogin(userData.password, userData.email);
+    //handleLogin(userData.password, userData.email);
+    onLogin(userData.password, userData.email);
   };
 
   return (
