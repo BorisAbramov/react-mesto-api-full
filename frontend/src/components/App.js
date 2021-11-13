@@ -14,6 +14,7 @@ import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import InfoToolTip from "./InfoToolTip";
 import * as auth from "../utils/auth";
+import { getContent } from "../utils/auth";
 
 
 
@@ -38,38 +39,71 @@ function App() {
   const [userEmail, setUserEmail] = useState({});
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
   const ESC_KEYCODE = 27;
 
   
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((res) => {
-        setCards(res);
-        //console.log(res);
-      })
-      .catch((err) => {
-        console.log(
-          `Непредвиденная ошибка при загрузке карточек: ${err.status} ${err.statusText}`
-        );
-      });
-  }, []);
+  // useEffect(() => {
+  //   api
+  //     .getInitialCards()
+  //     .then((res) => {
+  //       setCards(res);
+  //       //console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(
+  //         `Непредвиденная ошибка при загрузке карточек: ${err.status} ${err.statusText}`
+  //       );
+  //     });
+  // }, []);
 
+  // useEffect(() => {
+  //   api
+  //     .getUserInfo()
+  //     .then((userData) => {
+  //       setCurrentUser(userData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(
+  //         `Непредвиденная ошибка при загрузке данных пользователя: ${err.status} ${err.statusText}`
+  //       );
+  //     });
+  // }, []);
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userData) => {
-        setCurrentUser(userData);
-      })
-      .catch((err) => {
-        console.log(
-          `Непредвиденная ошибка при загрузке данных пользователя: ${err.status} ${err.statusText}`
-        );
-      });
-  }, []);
-
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      getContent(jwt)
+        .then((res) => {
+          if (res) {
+            setUserEmail(res.email);
+            setIsLoggedIn(true);
+            history.push("/");
+            //setHeaderLinkName("Выйти");
+            api
+            .getUserInfo(jwt)
+            .then((data) => {
+              setCurrentUser(data);
+              api
+              .getInitialCards(jwt)
+              .then((data) => {
+                setCards(data);
+              })
+              .catch((err) => {
+                showErrorMessage(err);
+              });
+            })
+            .catch((err) => {
+              showErrorMessage(err);
+            });
+          }
+        })
+        .catch((err) => {
+          showErrorMessage(err);
+        });
+    }
+  }, [isLoggedIn, history]);
   const handleAddCardSubmit = (newCard) => {
     setIsSubmitted(true);
 
@@ -155,7 +189,12 @@ function App() {
       });
   };
 
-
+  function showErrorMessage(error) {
+    setErrorMessage(error);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 3000);
+  }
 
   const handleRegister = (email, password, confirmPassword) => {
     if (password === confirmPassword) {
