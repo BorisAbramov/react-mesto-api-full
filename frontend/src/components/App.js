@@ -212,7 +212,7 @@ function App() {
             setIsInfoToolTipOpen(true);
             setIsSignedUp(true);
             setIsShowPassword(false);
-            history.push("/sign-in");
+            history.push("/signin");
           } else {
             setAuthUserData({
               ...authUserData,
@@ -296,7 +296,7 @@ function App() {
         })
         .catch((err) => {
           console.log(`Ошибка при проверке токена:${err}`)
-          history.push("/sign-in")
+          history.push("/signin")
           setAuthUserData({
             ...authUserData,
             message: `Ошибка авторизации пользователя. Пожалуйста, войдите под своей учетной записью`,
@@ -310,7 +310,7 @@ function App() {
     setIsLoggedIn(false);
     localStorage.removeItem("jwt");
     setUserEmail({});
-    history.push("/sign-in");
+    history.push("/signin");
   };
 
   const closeAllPopups = (evt) => {
@@ -411,10 +411,10 @@ function App() {
         onLikeClick={handleCardLike}
         onDeleteClick={handlePopupWithForm}
         signOut={signOut}
-        to={"/sign-in"}
+        to={"/signin"}
         userEmail={userEmail}
       />
-      <Route path="/sign-in">
+      <Route path="/signin">
         <Login onLogin={onLogin} isSubmitted={isSubmitted} />
       </Route>
       <Route path="/sign-up">
