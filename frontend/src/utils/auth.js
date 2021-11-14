@@ -62,7 +62,13 @@ export const login = (email, password) => {
     body: JSON.stringify({ email, password }),
   }).then((res) => {
     return checkStatus(res);
-  });
+  })
+  .then((data) => {
+          if (data.token) {
+            localStorage.setItem("jwt", data.token);
+            return data;
+          }
+        });
 };
 
 //проверка валидности токена
