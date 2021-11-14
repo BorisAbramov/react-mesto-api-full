@@ -11,8 +11,6 @@ const checkStatus = (res) => {
 
 //регистрация
 export const register = (email, password) => {
-  // console.log(password);
-  // console.log(email);
   return (
     fetch(`${BASE_URL}/signup`, {
       method: "POST",
@@ -32,26 +30,6 @@ export const register = (email, password) => {
 };
 
 //авторизация
-// export const authorize = (password, identifier) => {
-//   return fetch(`${BASE_URL}/signin`, {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       password: password,
-//       email: identifier,
-//     }),
-//   })
-//     .then((res) => checkStatus(res))
-//     .then((data) => {
-//       if (data.token) {
-//         localStorage.setItem("jwt", data.token);
-//         return data;
-//       }
-//     });
-// };
 export const login = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
@@ -66,19 +44,6 @@ export const login = (email, password) => {
 };
 
 //проверка валидности токена
-// export const checkToken = (token) => {
-//   return fetch(`${BASE_URL}/users/me`, {
-//     method: "GET",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//   })
-//   .then((res) => {
-//     return checkStatus(res);
-//   });
-// };
 export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
