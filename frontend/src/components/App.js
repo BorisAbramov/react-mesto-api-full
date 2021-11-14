@@ -160,7 +160,7 @@ function App() {
     setIsSubmitted(true);
 
     api
-      .updateAvatar(data)
+      .updateUserAvatar(data)
       .then((data) => {
         setCurrentUser(Object.assign(currentUser, { avatar: data.avatar }));
         setIsEditAvatarPopupOpen(false);
