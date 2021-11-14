@@ -10,7 +10,7 @@ const checkStatus = (res) => {
 };
 
 //регистрация
-export const register = (password, email) => {
+export const register = (email, password) => {
   // console.log(password);
   // console.log(email);
   return (
