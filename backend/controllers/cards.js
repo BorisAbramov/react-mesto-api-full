@@ -1,11 +1,9 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
 const Card = require('../models/card');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-const getCards = async (req, res, next) => {
+const getAllCards = async (req, res, next) => {
   try {
     res.send(await Card.find({}));
   } catch (err) {
@@ -30,12 +28,12 @@ const createCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   try {
     const owner = req.user._id;
-    const card = await Card.findById(req.params.cardId);
+    const card = await Card.findById(req.params.id);
     if (!card) {
       throw new NotFoundError('Карточка с указанным id не найдена');
     }
     if (owner === card.owner.toString()) {
-      await Card.findByIdAndRemove(req.params.cardId);
+      await Card.findByIdAndRemove(req.params.id);
       res.send({ message: 'пост удален' });
     }
     throw new ForbiddenError('Вы не можете удалять карточки других пользователей');
@@ -77,9 +75,9 @@ const dislikeCard = async (req, res, next) => {
 };
 
 module.exports = {
-  getCards,
-  deleteCard,
+  getAllCards,
   createCard,
+  deleteCard,
   likeCard,
   dislikeCard,
 };

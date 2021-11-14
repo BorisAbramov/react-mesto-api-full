@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -25,16 +23,39 @@ const getDataUser = async (req, res, next) => {
   }
 };
 
-const getUsers = (req, res) => User.find({})
-  .then((users) => res.status(200).send(users))
-  .catch((err) => {
-    console.log(`Error${err}`);
-    res.status(500).send({ message: 'Error!!!' });
-  });
-
-const getUser = async (req, res, next) => {
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
   try {
-    const user = (await User.findById(req.params.userId));
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      throw new UnauthorizedError('Неправильные почта или пароль');
+    }
+    const matched = await bcrypt.compare(password, user.password);
+    if (!matched) {
+      throw new UnauthorizedError('Неправильные почта или пароль');
+    }
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'protected-key',
+      { expiresIn: '7d' },
+    );
+    res.send({ token });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAllUsers = async (req, res, next) => {
+  try {
+    res.send(await User.find({}));
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getUserId = async (req, res, next) => {
+  try {
+    const user = (await User.findById(req.params.id));
     if (!user) {
       throw new NotFoundError('Пользователь по указанному id не найден');
     }
@@ -67,36 +88,14 @@ const createUser = async (req, res, next) => {
         ),
       );
     }
-    if (err.name === 'MongoServerError' && err.code === 11000) {
+    if (err.name === 'MongoError' && err.code === 11000) {
       next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
     }
     next(err);
   }
 };
 
-const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      throw new UnauthorizedError('Неправильные почта или пароль');
-    }
-    const matched = await bcrypt.compare(password, user.password);
-    if (!matched) {
-      throw new UnauthorizedError('Неправильные почта или пароль');
-    }
-    const token = jwt.sign(
-      { _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-key',
-      { expiresIn: '7d' },
-    );
-    res.send({ token });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const updateUser = async (req, res, next) => {
+const updateDataUser = async (req, res, next) => {
   const { name, about } = req.body;
   try {
     res.send(await User.findByIdAndUpdate(
@@ -105,6 +104,7 @@ const updateUser = async (req, res, next) => {
       {
         new: true,
         runValidators: true,
+        upsert: true,
       },
     ));
   } catch (err) {
@@ -124,6 +124,7 @@ const updateUserAvatar = async (req, res, next) => {
       {
         new: true,
         runValidators: true,
+        upsert: true,
       },
     ));
   } catch (err) {
@@ -145,10 +146,10 @@ const updateUserAvatar = async (req, res, next) => {
 };
 
 module.exports = {
-  getUsers,
-  getUser,
+  getAllUsers,
+  getUserId,
   createUser,
-  updateUser,
+  updateDataUser,
   updateUserAvatar,
   login,
   getDataUser,

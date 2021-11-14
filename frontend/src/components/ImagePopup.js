@@ -1,22 +1,17 @@
 import React from "react";
+import Popup from "./Popup";
 
-const ImagePopup = ({ isOpen, onClose, data }) => {
+export default function ImagePopup({ card, onClose, isOpen }) {
   return (
-    <div className={`popup popup_type_image ${ isOpen ? "popup_is-opened" : "" }`}>
-      <div className="popup__content popup__content_image" id="picture-popup" onClick={onClose}>
-        <button className="popup__close" type="button" aria-label="close popupImage" onClick={onClose}></button>
+    <Popup name="fullscreen" isOpen={isOpen} onClose={onClose}>
+      <figure className="popup__fullscreen-figure">
         <img
-          src={data && data.link}
-          alt={data && data.name}
-          className="popup__imgPic"
+          src={`${card.link}`}
+          alt={card.name}
+          className="popup__fullscreen-image"
         />
-        <h3 className="popup__imgText">{data && data.name}</h3>
-      </div>
-    </div>
+        <figcaption className="popup__caption">{card.name}</figcaption>
+      </figure>
+    </Popup>
   );
-};
-
-export default ImagePopup;
-
-
-
+}

@@ -2,9 +2,9 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const {
-  getUsers,
-  getUser,
-  updateUser,
+  getAllUsers,
+  getUserId,
+  updateDataUser,
   updateUserAvatar,
   getDataUser,
 } = require('../controllers/users');
@@ -18,20 +18,24 @@ const method = (value) => {
   throw new BadRequestError('указанный URL не прошел валидацию');
 };
 
-router.get('/users/me', getDataUser);
-router.get('/users', getUsers);
-router.get('/users/:userId', celebrate({
+router.get('/me', getDataUser);
+
+router.get('/', getAllUsers);
+
+router.get('/:id', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().hex().length(24),
+    id: Joi.string().hex().length(24),
   }),
-}), getUser);
-router.patch('/users/me', celebrate({
+}), getUserId);
+
+router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     about: Joi.string().min(2).max(30).required(),
   }),
-}), updateUser);
-router.patch('/users/me/avatar', celebrate({
+}), updateDataUser);
+
+router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().required().custom(method),
   }),

@@ -1,49 +1,53 @@
-import React, { useRef } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import useFormValidator from "../hooks/useFormValidator";
 
-const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, isSubmitted }) => {
-  const userAvatarRef = useRef("");
+export default function EditAvatarPopup({
+  isOpen,
+  onClose,
+  onUpdateAvatar,
+  sendingState,
+}) {
+  const currentFormValidator = useFormValidator();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    currentFormValidator.resetForm();
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleSubmit(e) {
     e.preventDefault();
-
-    if (isSubmitted) {
-      return;
-    }
-
     onUpdateAvatar({
-      avatar: userAvatarRef.current.value,
+      avatar: currentFormValidator.values.link,
     });
-
-    userAvatarRef.current.value = "";
-  };
-
-  
+  }
 
   return (
     <PopupWithForm
-      name={"user-avatar"}
-      title={"Обновить аватар"}
-      button={!isSubmitted ? "Сохранить" : "Сохранение"}
+      name="update-avatar"
+      title="Обновить аватар"
       isOpen={isOpen}
       onClose={onClose}
+      buttonText={` ${sendingState ? sendingState : "Сохранить"} `}
+      isDisabled={!currentFormValidator.isValid}
       onSubmit={handleSubmit}
-      idSubmitted={isSubmitted}
     >
-      <label className="popup__field" htmlFor="avatar-link-input">
+      <label className="popup__field">
         <input
-          ref={userAvatarRef}
+          value={currentFormValidator.values.link || ""}
+          onChange={currentFormValidator.handleChange}
+          id="link-input-avatar"
           type="url"
-          className="popup__input"
-          id="avatar-link-input"
-          name="avatarLinkInput"
-          placeholder="Ссылка на изображение (обязательно)"
           required
+          name="link"
+          placeholder="Ссылка на картинку"
+          className={` popup__input ${
+            currentFormValidator.errors.link ? "popup__input_type_error" : ""
+          }`}
         />
-        <span className="form__input-error" id="avatar-link-input-error" />
+        <span className="popup__input-error link-input-avatar-error">
+          {currentFormValidator.errors.link}
+        </span>
       </label>
     </PopupWithForm>
   );
-};
-
-export default EditAvatarPopup;
+}

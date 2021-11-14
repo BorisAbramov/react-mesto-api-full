@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true,
     select: false,
+    minlength: 8,
   },
 }, {
   versionKey: false,

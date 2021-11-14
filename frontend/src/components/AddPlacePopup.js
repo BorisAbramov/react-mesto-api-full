@@ -1,70 +1,73 @@
-import React, { useEffect, useState } from "react";
-import Input from "./Input";
+import  React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import useFormValidator from "../hooks/useFormValidator";
 
-const AddPlacePopup = ({ isOpen, onClose, onAddPlace, isSubmitted }) => {
-  const [placeName, setPlaceName] = useState("");
-  const [placeLink, setPlaceLink] = useState("")
+export default function AddPlacePopup({
+  isOpen,
+  onClose,
+  onAddPlace,
+  sendingState,
+}) {
+  const currentFormValidator = useFormValidator();
 
   useEffect(() => {
-    if (!isSubmitted) {
-      setPlaceName("");
-      setPlaceLink("");
-    }
-  }, [isSubmitted]);
+    currentFormValidator.resetForm();
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handlePlaceLinkChange = (e) => {
-    setPlaceLink(e.target.value);
-  };
-
-  const handlePlaceNameChange = (e) => {
-    setPlaceName(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    if (isSubmitted) {
-      return;
-    }
     onAddPlace({
-      name: placeName,
-      link: placeLink,
+      name: currentFormValidator.values.name,
+      link: currentFormValidator.values.link,
     });
-  };
+  }
 
-    
   return (
     <PopupWithForm
-      name={"user-card"}
-      title={"Новое место"}
-      button={"Создать"}
+      name="add-card"
+      title="Новое место"
       isOpen={isOpen}
       onClose={onClose}
+      buttonText={` ${sendingState ? sendingState : "Создать"} `}
+      isDisabled={!currentFormValidator.isValid}
       onSubmit={handleSubmit}
-      idSubmitted={isSubmitted}
     >
-      <Input
-        type="text"
-        value={placeName || ""}
-        id="place-name"
-        placeholder="Название (обязательно)"
-        name="placeNameInput"
-        required={true}
-        maxLength="30"
-        minLength="2"
-        onChange={handlePlaceNameChange}
-      />
-      <Input
-        type="url"
-        value={placeLink || ""}
-        id="place-link"
-        placeholder="Ссылка на картинку (обязательно)"
-        name="placeLinkInput"
-        required={true}
-        onChange={handlePlaceLinkChange}
-      />
+      <label className="popup__field">
+        <input
+          value={currentFormValidator.values.name || ""}
+          onChange={currentFormValidator.handleChange}
+          id="name-input-add"
+          required
+          name="name"
+          minLength="2"
+          maxLength="30"
+          placeholder="Название"
+          className={` popup__input ${
+            currentFormValidator.errors.name ? "popup__input_type_error" : ""
+          }`}
+          type="text"
+        />
+        <span className="popup__input-error name-input-add-error">
+          {currentFormValidator.errors.name}
+        </span>
+      </label>
+      <label className="popup__field">
+        <input
+          value={currentFormValidator.values.link || ""}
+          onChange={currentFormValidator.handleChange}
+          id="link-input"
+          type="url"
+          required
+          name="link"
+          placeholder="Ссылка на картинку"
+          className={` popup__input ${
+            currentFormValidator.errors.link ? "popup__input_type_error" : ""
+          }`}
+        />
+        <span className="popup__input-error name-input-add-error">
+          {currentFormValidator.errors.link}
+        </span>
+      </label>
     </PopupWithForm>
   );
-};
-
-export default AddPlacePopup;
+}

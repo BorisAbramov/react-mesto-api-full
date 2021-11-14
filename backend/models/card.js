@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const cardSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -10,21 +10,26 @@ const userSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      // eslint-disable-next-line no-useless-escape
+      validator: (v) => /^https?:\/\/(www\.)?[a-z0-9-._~:\/?#[\]@!$&'()*+,;=]*#?/i.test(v),
+      message: 'Указан невалидный формат ссылки',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
     required: true,
   },
   likes: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'user',
     default: [],
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+}, {
+  versionKey: false,
 });
 
-module.exports = mongoose.model('card', userSchema);
+module.exports = mongoose.model('card', cardSchema);

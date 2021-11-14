@@ -1,77 +1,85 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import PopupWithForm from "./PopupWithForm";
-import Input from "./Input";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import useFormValidator from "../hooks/useFormValidator";
 
-const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, isSubmitted }) => {
-  const { currentUser }  = useContext(CurrentUserContext);
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (isSubmitted) {
-      return;
-    }
-
-    onUpdateUser({
-      name,
-      about: description,
-    });
-  };
+export default function EditProfilePopup({
+  onUpdateUser,
+  isOpen,
+  onClose,
+  sendingState,
+}) {
+  const currentFormValidator = useFormValidator();
+  const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser, isOpen]);
+    if (currentUser.name) {
+      currentFormValidator.resetForm();
+      currentFormValidator.setValues({
+        ...currentFormValidator.values,
+        name: currentUser.name,
+        about: currentUser.about,
+      });
+      currentFormValidator.setIsValid(true);
+    }
+  }, [currentUser, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleChangeName = (e) => {
-    setName(e.target.value);
-  };
+  function handleSubmit(e) {
+    e.preventDefault();
+    onUpdateUser({
+      name: currentFormValidator.values.name,
+      about: currentFormValidator.values.about,
+    });
+  }
 
-  const handleChangeDescription = (e) => {
-    setDescription(e.target.value);
-  };
-
- 
   return (
     <PopupWithForm
-      name={"user-profile"}
-      title={"Редактировать профиль"}
-      button={!isSubmitted ? "Сохранить" : "Сохранение"}
+      name="edit-profile"
+      title="Редактировать профиль"
       isOpen={isOpen}
       onClose={onClose}
+      buttonText={` ${sendingState ? sendingState : "Сохранить"} `}
+      isDisabled={!currentFormValidator.isValid}
       onSubmit={handleSubmit}
-      idSubmitted={isSubmitted}
     >
-      <Input
-        type={"text"}
-        value={name || ""}
-        id={"user-name"}
-        name={"userNameInput"}
-        placeholder={"Имя"}
-        required={true}
-        maxLength={"40"}
-        minLength={"2"}
-        onChange={handleChangeName}
-      />
-
-      <Input
-        type={"text"}
-        value={description || ""}
-        id={"user-job"}
-        name={"userNameInput"}
-        placeholder={"О себе"}
-        required={true}
-        maxLength={"200"}
-        minLength={"2"}
-        onChange={handleChangeDescription}
-      />
+      <label className="popup__field">
+        <input
+          value={currentFormValidator.values.name || ""}
+          onChange={currentFormValidator.handleChange}
+          id="name-input-edit"
+          required
+          name="name"
+          minLength="2"
+          maxLength="40"
+          placeholder="Имя"
+          className={` popup__input ${
+            currentFormValidator.errors.name ? "popup__input_type_error" : ""
+          }`}
+          type="text"
+        />
+        <span className="popup__input-error name-input-edit-error">
+          {currentFormValidator.errors.name}
+        </span>
+      </label>
+      <label className="popup__field">
+        <input
+          value={currentFormValidator.values.about || ""}
+          onChange={currentFormValidator.handleChange}
+          id="job-input"
+          required
+          name="about"
+          minLength="2"
+          maxLength="200"
+          placeholder="О себе"
+          className={` popup__input ${
+            currentFormValidator.errors.about ? "popup__input_type_error" : ""
+          }`}
+          type="text"
+        />
+        <span className="popup__input-error job-input-error">
+          {currentFormValidator.errors.about}
+        </span>
+      </label>
     </PopupWithForm>
   );
-};
-
-export default EditProfilePopup;
+}
