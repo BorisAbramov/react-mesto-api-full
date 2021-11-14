@@ -2,9 +2,9 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const {
-  getAllCards,
-  createCard,
+  getCards,
   deleteCard,
+  createCard,
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
@@ -18,28 +18,24 @@ const method = (value) => {
   throw new BadRequestError('указанный URL не прошел валидацию');
 };
 
-router.get('/', getAllCards);
-
-router.post('/', celebrate({
+router.get('/cards', getCards);
+router.delete('/cards/:cardId', celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().hex().length(24),
+  }),
+}), deleteCard);
+router.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().custom(method),
   }),
 }), createCard);
-
-router.delete('/:id', celebrate({
-  params: Joi.object().keys({
-    id: Joi.string().hex().length(24),
-  }),
-}), deleteCard);
-
-router.put('/:cardId/likes', celebrate({
+router.put('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24),
   }),
 }), likeCard);
-
-router.delete('/:cardId/likes', celebrate({
+router.delete('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24),
   }),

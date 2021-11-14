@@ -1,83 +1,83 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import useFormValidator from "../hooks/useFormValidator";
+import React, { useState } from "react";
+import Header from "./Header";
+import InitialPageWithForm from "./InitialPageWithForm";
 
-export default function Register({ onSignOut, onRegister }) {
-  const currentFormValidator = useFormValidator();
+const Register = ({ handleRegister, isSubmitted }) => {
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  function handleSubmit(e) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    onRegister(
-      currentFormValidator.values.email,
-      currentFormValidator.values.password
-    );
-  } 
+    if (!userData.password || !userData.email) {
+      return;
+    }
+    handleRegister(userData.email, userData.password, userData.confirmPassword);
+  };
 
   return (
-    <div className="entry">
-      <h2 className="entry__title">Регистрация</h2>
-      <form
-        className="entry__form"
-        noValidate
-        action="#"
-        method="POST"
-        name="register"
+    <>
+      <Header
+        mix={"page__header section"}
+        buttonText={"Войти"}
+        endPoint={"/sign-in"}
+      />
+      <InitialPageWithForm
+        name={"user-sign-up"}
+        title={"Регистрация"}
+        button={!isSubmitted ? "Зарегистрироваться" : "Идет регистрация"}
         onSubmit={handleSubmit}
+        userSignUp={"Войти"}
+        isSubmitted={isSubmitted}
       >
-        <label className="entry__field">
-          <input
-            id="entry-input-email"
-            required
-            name="email"
-            minLength="5"
-            maxLength="40"
-            placeholder="Email"
-            className={` entry__input ${
-              currentFormValidator.errors.email ? "entry__input_type_error" : ""
-            }`}
-            type="email"
-            value={currentFormValidator.values.email || ""}
-            onChange={currentFormValidator.handleChange}
-          />
-          <span className="entry__input-error entry-input-email-error">
-            {currentFormValidator.errors.email}
-          </span>
-        </label>
-        <label className="entry__field">
-          <input
-            id="entry-input-password"
-            required
-            name="password"
-            minLength="5"
-            maxLength="40"
-            placeholder="Пароль"
-            className={` entry__input ${
-              currentFormValidator.errors.password
-                ? "entry__input_type_error"
-                : ""
-            }`}
-            type="password"
-            value={currentFormValidator.values.password || ""}
-            onChange={currentFormValidator.handleChange}
-          />
-          <span className="entry__input-error entry-input-email-error">
-            {currentFormValidator.errors.password}
-          </span>
-        </label>
-        <button
-          aria-label="submit form"
-          className={` entry__button-submit ${
-            !currentFormValidator.isValid ? "entry__button-submit_disabled" : ""
-          } `}
-          type="submit"
-          disabled={!currentFormValidator.isValid}
-        >
-          Зарегистрироваться
-        </button>
-        <Link className="entry__link" to="/sign-in" onClick={onSignOut}>
-          Уже зарегистрированы? Войти
-        </Link>
-      </form>
-    </div>
+        <input
+          className="login__input"
+          type="email"
+          value={userData.email}
+          id="email"
+          name="email"
+          placeholder="Email"
+          colormodifier={"form__login-input"}
+          required={true}
+          minLength="2"
+          onChange={handleChange}
+        />
+        <input
+          className="login__input"
+          type="password"
+          value={userData.password}
+          id="password"
+          name="password"
+          placeholder="Пароль"
+          colormodifier={"form__login-input"}
+          required={true}
+          onChange={handleChange}
+        />
+        <input
+          className="login__input"
+          type="password"
+          value={userData.confirmPassword}
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder="Подтвердите пароль"
+          colormodifier={"form__login-input"}
+          required={true}
+          onChange={handleChange}
+        />
+      </InitialPageWithForm>
+    </>
   );
-}
+};
+
+export default Register;

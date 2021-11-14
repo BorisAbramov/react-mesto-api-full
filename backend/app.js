@@ -1,32 +1,49 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const bodyParser = require('body-parser');
+const validator = require('validator');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
-const validator = require('validator');
-const { SETUP_MONGO, URL_MONGO } = require('./utils/constants');
-const { login, createUser } = require('./controllers/users');
+const usersRouter = require('./routes/users');
+const cardsRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 const BadRequestError = require('./errors/BadRequestError');
 const handleError = require('./errors/handleError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+// const options = {
+//   origin: [
+//     'http://localhost:3000',
+//     'https://http://mesto-full.nomoredomains.work',
+//     'https://BorisAbramov.github.io',
+//   ],
+//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204,
+//   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+//   credentials: true,
+// };
 
 const { PORT = 3000 } = process.env;
 const app = express();
+app.use(cors());
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST, PUT');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With,
+//   Content-Type, Accept, Authorization');
+//   next();
+// });
 
-mongoose.connect(URL_MONGO, SETUP_MONGO);
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const limiter = rateLimit({
-  windowMs: 30 * 60 * 1000,
-  max: 200,
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useNewUrlParser: true,
 });
+
+app.use(require('morgan')('dev'));
+
+app.use(express.json());
 
 const method = (value) => {
   const result = validator.isURL(value);
@@ -37,9 +54,6 @@ const method = (value) => {
 };
 
 app.use(requestLogger);
-app.use(helmet());
-app.use(limiter);
-app.use(cors());
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -66,17 +80,19 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
+app.use(cardsRouter);
+app.use(usersRouter);
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Указанный адрес не существует'));
 });
 
 app.use(errorLogger);
-
 app.use(errors());
 
 app.use(handleError);
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log('Running');
+});

@@ -1,50 +1,52 @@
-import React from "react";
+import React, { useContext } from 'react';
+import headerLogo from '../images/header-logo.svg';
+import { NavLink } from "react-router-dom";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export default function Header({ userEmail, headerLinkName, onSignOut }) {
-  const [visibleHeaderMenu, setVisibleHeaderMenu] = React.useState(false);
+const Header = ({buttonText, userEmail, endPoint, signOut}) => {
+    const { isBurgerMenuOpen, setIsBurgerMenuOpen } =
+    useContext(CurrentUserContext);
 
-  function handleClickMenu() {
-    setVisibleHeaderMenu(!visibleHeaderMenu);
-  }
+    //функция для открытия меню бургера
+    const handleMenuBurger = () => {
+      if (!isBurgerMenuOpen) {
+        setIsBurgerMenuOpen(true);
+        console.log(isBurgerMenuOpen);
+      } else {
+        setIsBurgerMenuOpen(false);
+        console.log(isBurgerMenuOpen);
+      }
+    };
 
-  function handleSignOut() {
-    setVisibleHeaderMenu(false);
-    onSignOut();
-  }
 
-  return (
-    <header className="header">
-      <div className="header__logo"></div>
-      <div
-        className={` header__menu ${
-          userEmail ? "header__menu_type_sign-in" : ""
-        } ${visibleHeaderMenu ? "header__menu_type_active" : ""}`}
-        onClick={handleClickMenu}
-      ></div>
-      <div
-        className={` header__account-menu ${
-          userEmail ? "header__account-menu_type_sign-in" : ""
-        } ${visibleHeaderMenu ? "header__account-menu_type_visible" : ""}`}
+
+    return (
+        <header className="header">
+            <NavLink to="/main" className="logo">
+                <img src={headerLogo} alt="Логотип" className="header__logo" />
+            </NavLink>
+            <div
+        className={`header__burger ${isBurgerMenuOpen ? "active" : ""}`}
+        onClick={handleMenuBurger}
       >
-        <div className="header__wrapper-user-email">
-          <p
-            className={` header__user-email ${
-              userEmail ? "header__user-email_type_sign-in" : ""
-            }`}
-          >
+        <span
+          className={`header__burger_span ${isBurgerMenuOpen ? "active" : ""}`}
+        />
+      </div>
+      <div className={`header__menu ${isBurgerMenuOpen ? "active" : ""}`}>
+        {userEmail && (
+          <p className={`header__item ${isBurgerMenuOpen ? "active" : ""}`}>
             {userEmail}
           </p>
-        </div>
-        <button
-          type="button"
-          className={` header__button ${
-            userEmail ? "header__button_type_sign-in" : ""
-          }`}
-          onClick={handleSignOut}
-        >
-          {headerLinkName}
-        </button>
+        )}
+        <p className={`header__item ${isBurgerMenuOpen ? "active" : ""}`}>
+          <NavLink className="header__link" to={endPoint} onClick={signOut}>
+            {buttonText}
+          </NavLink>
+        </p>
       </div>
-    </header>
-  );
+        </header>  
+    )
 }
+
+export default Header;

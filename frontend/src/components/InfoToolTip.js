@@ -1,23 +1,39 @@
-import React from "react";
-import Popup from "./Popup";
+import React, { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export default function InfoTooltip({ onClose, statusRegister, isOpen, name }) {
+const InfoToolTip = ({ isOpen, onClose, name }) => {
+  const { authUserData, isSignedUp } = useContext(CurrentUserContext);
+
+  // console.log(authUserData.message)
   return (
-    <Popup
-      onClose={onClose}
-      name={name}
-      isOpen={isOpen}
-      title={
-        statusRegister
-          ? "Вы успешно зарегистрировались!"
-          : "Что-то пошло не так! Попробуйте ещё раз."
-      }
+    <section
+      className={`popup ${
+        isOpen ? "popup_is-opened" : ""
+      }`}
+      id={`edit-${name}`}
+      onClick={onClose}
     >
-      <div
-        className={`popup__image popup__image_type_${
-          statusRegister ? "success" : "failure"
-        }`}
-      ></div>
-    </Popup>
+      <div className="popup__content popup__content_size-s">
+        <div
+          className={`popup__icon ${
+            isSignedUp
+              ? "popup__icon_status_ok"
+              : "popup__icon_status_err"
+          }`}
+        />
+        <h2 className="popup__title">
+          {authUserData.message}
+        </h2>
+        <button
+          arial-lable="Закрыть форму без сохранения данных"
+          tittle="Закрыть"
+          type="button"
+          className="popup__close"
+          onClick={onClose}
+        />
+      </div>
+    </section>
   );
-}
+};
+
+export default InfoToolTip;

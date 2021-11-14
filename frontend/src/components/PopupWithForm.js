@@ -1,38 +1,45 @@
 import React from "react";
-import Popup from "./Popup";
 
-export default function PopupWithForm({
+function PopupWithForm({
   name,
   title,
   isOpen,
   onClose,
-  children,
-  isDisabled = false,
-  buttonText,
   onSubmit,
+  children,
+  button,
+  idSubmitted,
 }) {
   return (
-    <Popup onClose={onClose} name={name} isOpen={isOpen} title={title}>
-      <form
-        onSubmit={onSubmit}
-        noValidate
-        action="#"
-        name={name}
-        className={`popup__form popup__form_type_${name}`}
-        method="POST"
-      >
-        {children}
-        <button
-          disabled={isDisabled}
-          aria-label="submit form"
-          className={`popup__button-submit ${
-            isDisabled ? "popup__button-submit_disabled" : ""
-          } popup__button-submit_type_${name}`}
-          type="submit"
-        >
-          {buttonText}
-        </button>
-      </form>
-    </Popup>
+    <div className={`popup ${
+      isOpen ? "popup_is-opened" : ""
+    }`}
+    id={`edit-${name}`}
+    onClick={onClose}>
+            <div className={`popup__content`}>
+                <button
+                 type="button" 
+                 aria-label="close popup" 
+                 className="popup__close" 
+                 onClick={onClose} 
+                />
+                <h3 className="popup__title">{title}</h3>
+                <form
+                 action="#"
+                 id={`${name}`}
+                 name={`${name}`}
+                 className={`popup__form`}
+                 onSubmit={onSubmit}
+                 >
+                  {children}
+                    <button 
+                    aria-label="submit form"
+                    className="popup__submit popup__submit_disabled"
+                    type="submit" disabled={idSubmitted}>{button}</button>
+                </form>
+            </div>
+        </div>
   );
 }
+
+export default PopupWithForm;
