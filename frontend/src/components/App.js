@@ -170,22 +170,34 @@ function App() {
       });
   };
 
-  const handleAvatarUpdate = (data) => {
-    setIsSubmitted(true);
+  // const handleAvatarUpdate = (data) => {
+  //   setIsSubmitted(true);
 
+  //   api
+  //     .updateUserAvatar(data)
+  //     .then((data) => {
+  //       setCurrentUser(Object.assign(currentUser, { avatar: data.avatar }));
+  //       setIsEditAvatarPopupOpen(false);
+  //       setTimeout(() => setIsSubmitted(false), 1000);
+  //     })
+  //     .catch((err) => {
+  //       console.log(
+  //         `Непредвиденная ошибка при загрузки изображения аватара: ${err.status} ${err.statusText}`
+  //       );
+  //     });
+  // };
+  function handleAvatarUpdate(data) {
+    const jwt = localStorage.getItem("jwt");
     api
-      .updateUserAvatar(data)
+      .updateUserAvatar(data,jwt)
       .then((data) => {
-        setCurrentUser(Object.assign(currentUser, { avatar: data.avatar }));
-        setIsEditAvatarPopupOpen(false);
-        setTimeout(() => setIsSubmitted(false), 1000);
+        setCurrentUser(data);
+        closeAllPopups();
       })
       .catch((err) => {
-        console.log(
-          `Непредвиденная ошибка при загрузки изображения аватара: ${err.status} ${err.statusText}`
-        );
+        showErrorMessage(err);
       });
-  };
+  }
 
   const handleUserUpdate = (data) => {
     const jwt = localStorage.getItem("jwt");
