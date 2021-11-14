@@ -202,7 +202,7 @@ function App() {
       setIsSubmitted(true);
 
       auth
-        .register(password, email)
+        .register(email, password)
         .then((res) => {
           if (res) {
             setAuthUserData({
