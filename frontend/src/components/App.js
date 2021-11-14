@@ -188,10 +188,11 @@ function App() {
   };
 
   const handleUserUpdate = (data) => {
+    const jwt = localStorage.getItem("jwt");
     setIsSubmitted(true);
 
     api
-      .updateUserData(data)
+      .updateUserData(data, jwt)
       .then((data) => {
         setCurrentUser(data);
         setIsEditProfilePopupOpen(false);
