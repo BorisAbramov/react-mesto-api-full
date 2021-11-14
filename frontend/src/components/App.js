@@ -105,22 +105,35 @@ function App() {
         });
     }
   }, [isLoggedIn, history]);
-  const handleAddCardSubmit = (newCard) => {
-    setIsSubmitted(true);
 
+  // const handleAddCardSubmit = (newCard) => {
+  //   setIsSubmitted(true);
+
+  //   api
+  //     .addCard(newCard)
+  //     .then((newCard) => {
+  //       setCards([newCard, ...cards]);
+  //       setIsAddPlacePopupOpen(false);
+  //       setTimeout(() => setIsSubmitted(false), 1000);
+  //     })
+  //     .catch((err) => {
+  //       console.log(
+  //         `Непредвиденная ошибка при загрузки карточки пользователя: ${err.status} ${err.statusText}`
+  //       );
+  //     });
+  // };
+  function handleAddCardSubmit(data) {
+    const jwt = localStorage.getItem("jwt");
     api
-      .addCard(newCard)
+      .addNewCard(data, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
-        setIsAddPlacePopupOpen(false);
-        setTimeout(() => setIsSubmitted(false), 1000);
+        closeAllPopups();
       })
       .catch((err) => {
-        console.log(
-          `Непредвиденная ошибка при загрузки карточки пользователя: ${err.status} ${err.statusText}`
-        );
+        showErrorMessage(err);
       });
-  };
+  }
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some((user) => user._id === currentUser._id);

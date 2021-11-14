@@ -4,7 +4,7 @@ import PopupWithForm from "./PopupWithForm";
 
 const AddPlacePopup = ({ isOpen, onClose, onAddPlace, isSubmitted }) => {
   const [placeName, setPlaceName] = useState("");
-  const [placeLink, setPlaceLink] = useState("")
+  const [placeLink, setPlaceLink] = useState("");
 
   useEffect(() => {
     if (!isSubmitted) {
@@ -21,17 +21,23 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace, isSubmitted }) => {
     setPlaceName(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (isSubmitted) {
+  //     return;
+  //   }
+  //   onAddPlace({
+  //     name: placeName,
+  //     link: placeLink,
+  //   });
+  // };
+  function handleSubmit(e) {
     e.preventDefault();
-    if (isSubmitted) {
-      return;
-    }
     onAddPlace({
       name: placeName,
       link: placeLink,
     });
-  };
-
+  }
     
   return (
     <PopupWithForm
