@@ -55,7 +55,10 @@ export const register = (password, email) => {
 export const login = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    headers,
+    headers: {
+             Accept: "application/json",
+             "Content-Type": "application/json",
+           },
     body: JSON.stringify({ email, password }),
   }).then((res) => {
     return checkStatus(res);
