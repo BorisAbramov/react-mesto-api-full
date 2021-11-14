@@ -21,8 +21,8 @@ export const register = (email, password) => {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        password: password,
         email: email,
+        password: password,
       }),
     })
     .then((res) => {
