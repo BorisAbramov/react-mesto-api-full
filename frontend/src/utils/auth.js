@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.mestorussia.nikolaym.nomoredomains.club";
+const BASE_URL = "https://api.mesto-full.nomoredomains.work";
 
 const headers = {
   "Content-Type": "application/json",
