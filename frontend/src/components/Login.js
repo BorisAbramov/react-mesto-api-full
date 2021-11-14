@@ -24,7 +24,7 @@ const Login = ({ onLogin, isSubmitted }) => {
     }
 
     //handleLogin(userData.password, userData.email);
-    onLogin(userData.password, userData.email);
+    onLogin(userData.email, userData.password);
   };
 
   return (
