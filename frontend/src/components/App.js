@@ -170,34 +170,35 @@ function App() {
       });
   };
 
-  // const handleAvatarUpdate = (data) => {
-  //   setIsSubmitted(true);
-
-  //   api
-  //     .updateUserAvatar(data)
-  //     .then((data) => {
-  //       setCurrentUser(Object.assign(currentUser, { avatar: data.avatar }));
-  //       setIsEditAvatarPopupOpen(false);
-  //       setTimeout(() => setIsSubmitted(false), 1000);
-  //     })
-  //     .catch((err) => {
-  //       console.log(
-  //         `Непредвиденная ошибка при загрузки изображения аватара: ${err.status} ${err.statusText}`
-  //       );
-  //     });
-  // };
-  function handleAvatarUpdate(data) {
+   const handleAvatarUpdate = (data) => {
     const jwt = localStorage.getItem("jwt");
+    setIsSubmitted(true);
+
     api
-      .updateUserAvatar(data,jwt)
+      .updateUserAvatar(data, jwt)
       .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
+        setCurrentUser(Object.assign(currentUser, { avatar: data.avatar }));
+        setIsEditAvatarPopupOpen(false);
+        setTimeout(() => setIsSubmitted(false), 1000);
       })
       .catch((err) => {
-        showErrorMessage(err);
+        console.log(
+          `Непредвиденная ошибка при загрузки изображения аватара: ${err.status} ${err.statusText}`
+        );
       });
-  }
+  };
+  // function handleAvatarUpdate(data) {
+  //   const jwt = localStorage.getItem("jwt");
+  //   api
+  //     .updateUserAvatar(data,jwt)
+  //     .then((data) => {
+  //       setCurrentUser(data);
+  //       closeAllPopups();
+  //     })
+  //     .catch((err) => {
+  //       showErrorMessage(err);
+  //     });
+  // }
 
   const handleUserUpdate = (data) => {
     const jwt = localStorage.getItem("jwt");
