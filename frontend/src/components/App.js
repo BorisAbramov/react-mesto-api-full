@@ -205,7 +205,7 @@ function App() {
     setIsSubmitted(true);
 
     api
-      .updateUserData(data, jwt)
+      .updateDataUser(data, jwt)
       .then((data) => {
         setCurrentUser(data);
         setIsEditProfilePopupOpen(false);
