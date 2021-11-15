@@ -32,7 +32,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, isSubmitted }) => {
           type="url"
           className="popup__input"
           id="avatar-link-input"
-          name="avatarLinkInput"
+          name="link"
           placeholder="Ссылка на изображение (обязательно)"
           required
         />
