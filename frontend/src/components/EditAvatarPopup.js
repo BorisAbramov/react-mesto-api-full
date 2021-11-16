@@ -11,7 +11,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, isSubmitted }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(currentFormValidator);
+    console.log(currentFormValidator.values.link);
     onUpdateAvatar({
       avatar: currentFormValidator.values.link,
     });
