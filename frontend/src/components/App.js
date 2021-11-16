@@ -137,7 +137,7 @@ function App() {
 
   const handleCardLike = (card) => {
     const jwt = localStorage.getItem("jwt");
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((user) => user === currentUser._id);
 
     const method = !isLiked ? "PUT" : "DELETE";
     api
