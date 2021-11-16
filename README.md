@@ -3,6 +3,6 @@
   
 #ссылка на домен
 
-https://mesto-full.nomoredomains.work/
+https://api.mesto-full.nomoredomains.work/
 
 51.250.20.239
