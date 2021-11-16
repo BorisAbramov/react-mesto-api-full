@@ -3,7 +3,7 @@
   
 # ссылка на домен фронтенд
 
-https://mesto-full.nomoredomains.work/
+https://api.mesto-full.nomoredomains.work/
 
 # ссылка на домен бэкенд
 
