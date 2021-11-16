@@ -87,9 +87,9 @@ class Api {
       });
     }
 
-  likeCard(id, token) {
+  likeCard(method, id, token) {
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-      method: "PUT",
+      method,
       headers: {
         "Content-Type": "application/json",
         'authorization': `Bearer ${token}`
