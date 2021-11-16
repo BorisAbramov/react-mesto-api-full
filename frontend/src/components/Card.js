@@ -11,7 +11,7 @@ const Card = ({ onCardClick, onCardLike, onCardDelete, card }) => {
       onCardClick(card);
     };
     
-    const cardLikeButtonClassName = `list__like ${
+    const cardLikeButtonClassName = `list__like foo ${
       isLiked ? "list__like_active" : ""
     }`;
 
