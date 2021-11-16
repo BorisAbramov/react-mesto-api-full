@@ -308,33 +308,33 @@ function App() {
       });
   }
 
-  useEffect(() => {
-    handleTokenCheck();
-  }, [history]);
+  // useEffect(() => {
+  //   handleTokenCheck();
+  // }, [history]);
 
-  const handleTokenCheck = () => {
-    const token = localStorage.getItem("jwt");
+  // const handleTokenCheck = () => {
+  //   const token = localStorage.getItem("jwt");
 
-    if (token) {
-      auth
-        .getContent(token)
-        .then((res) => {
-          const { data } = res;
-          setUserEmail(data.email);
-          setIsLoggedIn(true);
-          history.push("/main");
-        })
-        .catch((err) => {
-          console.log(`Ошибка при проверке токена:${err}`)
-          history.push("/signin")
-          setAuthUserData({
-            ...authUserData,
-            message: `Ошибка авторизации пользователя. Пожалуйста, войдите под своей учетной записью`,
-          });
-          setIsInfoToolTipOpen(true);
-        });
-    }
-  };
+  //   if (token) {
+  //     auth
+  //       .getContent(token)
+  //       .then((res) => {
+  //         const { data } = res;
+  //         setUserEmail(data.email);
+  //         setIsLoggedIn(true);
+  //         history.push("/main");
+  //       })
+  //       .catch((err) => {
+  //         console.log(`Ошибка при проверке токена:${err}`)
+  //         history.push("/signin")
+  //         setAuthUserData({
+  //           ...authUserData,
+  //           message: `Ошибка авторизации пользователя. Пожалуйста, войдите под своей учетной записью`,
+  //         });
+  //         setIsInfoToolTipOpen(true);
+  //       });
+  //   }
+  // };
 
   const signOut = () => {
     setIsLoggedIn(false);
