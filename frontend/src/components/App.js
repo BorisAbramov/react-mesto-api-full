@@ -155,10 +155,11 @@ function App() {
   };
 
   const handleCardDelete = (card) => {
+    const jwt = localStorage.getItem("jwt");
     setIsSubmitted(true);
 
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, jwt)
       .then(() => {
         setCards(cards.filter((item) => item._id !== card._id));
         setIsPopupWithSubmitOpen(false);
