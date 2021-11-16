@@ -44,34 +44,6 @@ function App() {
   const history = useHistory();
   const ESC_KEYCODE = 27;
 
-  
-
-  // useEffect(() => {
-  //   api
-  //     .getInitialCards()
-  //     .then((res) => {
-  //       setCards(res);
-  //       //console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(
-  //         `Непредвиденная ошибка при загрузке карточек: ${err.status} ${err.statusText}`
-  //       );
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   api
-  //     .getUserInfo()
-  //     .then((userData) => {
-  //       setCurrentUser(userData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(
-  //         `Непредвиденная ошибка при загрузке данных пользователя: ${err.status} ${err.statusText}`
-  //       );
-  //     });
-  // }, []);
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
@@ -106,22 +78,6 @@ function App() {
     }
   }, [isLoggedIn, history]);
 
-  // const handleAddCardSubmit = (newCard) => {
-  //   setIsSubmitted(true);
-
-  //   api
-  //     .addCard(newCard)
-  //     .then((newCard) => {
-  //       setCards([newCard, ...cards]);
-  //       setIsAddPlacePopupOpen(false);
-  //       setTimeout(() => setIsSubmitted(false), 1000);
-  //     })
-  //     .catch((err) => {
-  //       console.log(
-  //         `Непредвиденная ошибка при загрузки карточки пользователя: ${err.status} ${err.statusText}`
-  //       );
-  //     });
-  // };
   function handleAddCardSubmit(data) {
     const jwt = localStorage.getItem("jwt");
     api
@@ -189,18 +145,6 @@ function App() {
         );
       });
   };
-  // function handleAvatarUpdate(data) {
-  //   const jwt = localStorage.getItem("jwt");
-  //   api
-  //     .updateUserAvatar(data,jwt)
-  //     .then((data) => {
-  //       setCurrentUser(data);
-  //       closeAllPopups();
-  //     })
-  //     .catch((err) => {
-  //       showErrorMessage(err);
-  //     });
-  // }
 
   const handleUserUpdate = (data) => {
     const jwt = localStorage.getItem("jwt");
@@ -307,34 +251,6 @@ function App() {
         setIsInfoToolTipOpen(true);
       });
   }
-
-  // useEffect(() => {
-  //   handleTokenCheck();
-  // }, [history]);
-
-  // const handleTokenCheck = () => {
-  //   const token = localStorage.getItem("jwt");
-
-  //   if (token) {
-  //     auth
-  //       .getContent(token)
-  //       .then((res) => {
-  //         const { data } = res;
-  //         setUserEmail(data.email);
-  //         setIsLoggedIn(true);
-  //         history.push("/main");
-  //       })
-  //       .catch((err) => {
-  //         console.log(`Ошибка при проверке токена:${err}`)
-  //         history.push("/signin")
-  //         setAuthUserData({
-  //           ...authUserData,
-  //           message: `Ошибка авторизации пользователя. Пожалуйста, войдите под своей учетной записью`,
-  //         });
-  //         setIsInfoToolTipOpen(true);
-  //       });
-  //   }
-  // };
 
   const signOut = () => {
     setIsLoggedIn(false);
